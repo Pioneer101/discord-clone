@@ -18,21 +18,21 @@ code {
 
 @font-face {
     font-family: 'gg sans';
-    src: url('fonts/ggsans-ExtraBold.woff') format('woff2');
+    src: url('fonts/ggsans-ExtraBold.woff2') format('woff2');
     font-style: normal;
     font-weight: 800;
 }
 
 @font-face {
     font-family: 'gg sans';
-    src: url('fonts/ggsans-Bold.woff') format('woff2');
+    src: url('fonts/ggsans-Bold.woff2') format('woff2');
     font-style: normal;
     font-weight: 700;
 }
 
 @font-face {
     font-family: 'gg sans';
-    src: url('fonts/ggsans-Semibold.woff') format('woff2');
+    src: url('fonts/ggsans-Semibold.woff2') format('woff2');
     font-style: normal;
     font-weight: 600;
 }
