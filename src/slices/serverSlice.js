@@ -97,7 +97,7 @@ const initialState = {
             serverName: "伺服3",
             serverIcon: "",
             showNotice: true,
-            noticeCount: 12,
+            noticeCount: 14,
         },
         7: {
             serverName: "伺服7",

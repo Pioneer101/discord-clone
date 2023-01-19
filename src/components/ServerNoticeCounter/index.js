@@ -7,8 +7,8 @@ export const NoticeBorder = styled.div`
     justify-content: center;
     align-items: center;
     min-width: ${({ digit }) => 23 + 7 * digit}px;
-    bottom: -9px;
-    right: -7px;
+    bottom: -8px;
+    right: -8px;
     height: 24px;
     margin: 4px;
     border-radius: 20px;
@@ -23,7 +23,7 @@ export const NoticeMask = styled.div`
     overflow: hidden;
     width: 48px;
     height: 48px;
-    border-radius: 50%;
+    border-radius: 0%;
     transition: border-radius 0.1s;
 `;
 export const NoticeContent = styled.span`
@@ -32,19 +32,22 @@ export const NoticeContent = styled.span`
     display: ${({ showNotice }) => (showNotice ? "flex" : "none")};
     justify-content: center;
     align-items: center;
-    min-width: ${({ digit }) => 16 + 7 * digit}px;
+    min-width: ${({ digit }) => 16 + 6 * digit}px;
     bottom: -4px;
     right: -4px;
     border-radius: 20px;
     margin: 4px;
     background: ${({ theme }) => theme.brand_danger};
     font-size: 12px;
-    font-weight: 600;
+    line-height: 16px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    vertical-align: text-top;
     transition: opacity 0.2s, transform 0.2s;
 
     & > span {
         color: ${({ theme }) => theme.header_primary};
-        transform: translate(0, -1px);
+        /* transform: translate(0, -1px); */
     }
 `;
 export const Wapper = styled.div`

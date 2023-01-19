@@ -3,7 +3,7 @@ body {
     /* -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
         Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue",
         sans-serif; */
-        font-family: 'Whitney';
+        font-family: 'gg sans';
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
@@ -17,22 +17,36 @@ code {
 
 
 @font-face {
-    font-family: 'Whitney';
-    src: url('https://fonts.cdnfonts.com/s/22780/whitneysemibold.woff') format('woff');
+    font-family: 'gg sans';
+    src: url('fonts/ggsans-ExtraBold.woff') format('woff2');
+    font-style: normal;
+    font-weight: 800;
+}
+
+@font-face {
+    font-family: 'gg sans';
+    src: url('fonts/ggsans-Bold.woff') format('woff2');
+    font-style: normal;
+    font-weight: 700;
+}
+
+@font-face {
+    font-family: 'gg sans';
+    src: url('fonts/ggsans-Semibold.woff') format('woff2');
     font-style: normal;
     font-weight: 600;
 }
 
 @font-face {
-    font-family: "Whitney";
-    src: url("fonts/Whitney-Medium.woff") format('woff');
+    font-family: "gg sans";
+    src: url("fonts/ggsans-Medium.woff2") format('woff2');
     font-style: normal;
     font-weight: 500;
 }
 
 @font-face {
-    font-family: "Whitney";
-    src: url("fonts/Whitney-Book.woff") format('woff');
+    font-family: "gg sans";
+    src: url("fonts/ggsans-Normal.woff2") format('woff2');
     font-style: normal;
     font-weight: 400;
 }
