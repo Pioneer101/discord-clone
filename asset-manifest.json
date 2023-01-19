@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "./static/css/main.8b157241.css",
-    "main.js": "./static/js/main.e59b2cdc.js",
+    "main.js": "./static/js/main.f285111d.js",
     "static/media/ggsans-ExtraBold.woff2": "./static/media/ggsans-ExtraBold.d8127ff55e3340847b7b.woff2",
     "static/media/ggsans-Semibold.woff2": "./static/media/ggsans-Semibold.07eba4ed4196e587d5b7.woff2",
     "static/media/ggsans-Medium.woff2": "./static/media/ggsans-Medium.daa584d0d211cd0f2223.woff2",
@@ -9,10 +9,10 @@
     "static/media/ggsans-Normal.woff2": "./static/media/ggsans-Normal.fae9ad444c5635bed631.woff2",
     "index.html": "./index.html",
     "main.8b157241.css.map": "./static/css/main.8b157241.css.map",
-    "main.e59b2cdc.js.map": "./static/js/main.e59b2cdc.js.map"
+    "main.f285111d.js.map": "./static/js/main.f285111d.js.map"
   },
   "entrypoints": [
     "static/css/main.8b157241.css",
-    "static/js/main.e59b2cdc.js"
+    "static/js/main.f285111d.js"
   ]
 }
