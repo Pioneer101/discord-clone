@@ -23,7 +23,9 @@ DEMO：[Github Page](https://pioneer101.github.io/discord-clone)
 
 第一個用現成的庫還可以解決，但第二項要實現的拖移功能場景過於複雜，不只是單純的換位置、或放進某個 Element 裡，需要同時做到兩件事情，還得判斷是否處於某個資料夾裡。所以只好放棄抄捷徑的想法，手動造輪。
 
-![Alt text](https://cdn.discordapp.com/attachments/1065579919502999643/1065579941665714247/image.png)
+< div style = "text-align:center" >
+img src = "https://cdn.discordapp.com/attachments/1065579919502999643/1065579941665714247/image.png" />
+</ div >
 
 剛開始想了兩個方案：
 
