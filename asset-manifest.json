@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/discord-clone/static/css/main.170971b0.css",
-    "main.js": "/discord-clone/static/js/main.bc5bedd4.js",
+    "main.js": "/discord-clone/static/js/main.bf3e38b1.js",
     "static/media/Whitney-Book.woff": "/discord-clone/static/media/Whitney-Book.8d9c54304d51ddf3a403.woff",
     "static/media/Whitney-Medium.woff": "/discord-clone/static/media/Whitney-Medium.d39f4a5143c8ac1985bf.woff",
     "index.html": "/discord-clone/index.html",
     "main.170971b0.css.map": "/discord-clone/static/css/main.170971b0.css.map",
-    "main.bc5bedd4.js.map": "/discord-clone/static/js/main.bc5bedd4.js.map"
+    "main.bf3e38b1.js.map": "/discord-clone/static/js/main.bf3e38b1.js.map"
   },
   "entrypoints": [
     "static/css/main.170971b0.css",
-    "static/js/main.bc5bedd4.js"
+    "static/js/main.bf3e38b1.js"
   ]
 }
