@@ -2,7 +2,7 @@
     "name": "discord-clone",
     "version": "0.1.0",
     "private": true,
-    "homepage": "https://Pioneer101.github.io/discord-clone",
+    "homepage": ".",
     "dependencies": {
         "@reduxjs/toolkit": "^1.8.0",
         "@testing-library/jest-dom": "^5.16.3",

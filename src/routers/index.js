@@ -1,4 +1,4 @@
-import { Routes, Route, BrowserRouter } from "react-router-dom";
+import { Routes, Route, BrowserRouter, HashRouter } from "react-router-dom";
 import { useNavigate, useParams } from "react-router";
 import ChatArea from "../components/ChatArea";
 import ServerLayout from "../pages/serverLayout";
@@ -7,7 +7,7 @@ import NotFoundPage from "../pages/notFoundPage";
 
 function AppRoute() {
     return (
-        <BrowserRouter>
+        <HashRouter>
             <Routes>
                 <Route path="/" element={<ServerLayout />}>
                     <Route path="channels" element={<BaseLayout />}>
@@ -19,7 +19,7 @@ function AppRoute() {
                     </Route>
                 </Route>
             </Routes>
-        </BrowserRouter>
+        </HashRouter>
     );
 }
 
