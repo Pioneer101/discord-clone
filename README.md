@@ -1,70 +1,36 @@
-# Getting Started with Create React App
+# Discord react clone
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+DEMO：[Github Page](https://pioneer101.github.io/discord-clone)
 
-## Available Scripts
+可以先點進來玩玩看。
 
-In the project directory, you can run:
+# 背景
 
-### `npm start`
+一開始是打算用 React + WebRTC 實現一個 Discord。不過由於諸多原因延誤最後只進行了一部分刻板的部分。
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+# 過程痛點
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+原本以為這個板刻起來難度不高，那個看起來很常見的側邊攔難度夭壽高。
 
-### `npm test`
+## 拖拉效果
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+首先是實現拖拉效果，先確定需求：
 
-### `npm run build`
+-   可以插入指定位置
+-   可以與 非資料夾 和 資料夾內伺服疊 成資料夾
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+原本有先尋找網路上有實現的拖移庫。（e.g. react-dnd）
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+第一個用現成的庫還可以解決，但第二項要實現的拖移功能場景過於複雜，不只是單純的換位置、或放進某個 Element 裡，需要同時做到兩件事情，還得判斷是否處於某個資料夾裡。所以只好放棄抄捷徑的想法，手動造輪。
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+![Alt text](https://cdn.discordapp.com/attachments/1065579919502999643/1065579941665714247/image.png)
 
-### `npm run eject`
+剛開始想了兩個方案：
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+一個是紀錄單獨 伺服器 Item 的座標，依照座標判斷，他處於 Item 的上中下段，上下段決定插入位置，中段決定合併為資料夾。
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+但是這種持續監聽 mousemove 的行為很吃性能，沒辦法做得跟本家一樣絲滑。
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+之後就想說能不能在 Item 上方覆蓋三個看不見的 Div 只要判斷進到哪個 Div 就可以判斷位於哪段。
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+然後跑去看了本家的實現
