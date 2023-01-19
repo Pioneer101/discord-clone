@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { swap, remove, insert, findElIdByDataId } from "../utils/funciton";
 
 const initialState = {
+    firstOpenApp: true,
     activeServerElId: "@me",
     serverEl: ["2", "3", "4", "5", "99", "1", "10", "11", "12"],
     serverElState: {
@@ -143,6 +144,7 @@ export const serverSlice = createSlice({
         setActiveServerElId: (state, action) => {
             const serverElId = action.payload;
             state.activeServerElId = serverElId;
+            state.firstOpenApp = false;
         },
         setDraggingServerElId: (state, action) => {
             const serverElId = action.payload;
@@ -442,6 +444,7 @@ export const {
     toggleFolder,
 } = serverSlice.actions;
 
+export const getFirstOpenApp = (state) => state.server.firstOpenApp;
 export const getUserData = (userNameTag) => (state) =>
     state.server.userData[userNameTag];
 
