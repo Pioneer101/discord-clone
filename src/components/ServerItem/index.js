@@ -39,7 +39,7 @@ export const Wapper = styled.a`
     width: 48px;
     height: 48px;
     outline: 0;
-    border-radius: 50%;
+    border-radius: 33%;
     opacity: 1;
     transition: opacity 0.1s, border-radius 0.1s;
 
@@ -50,7 +50,7 @@ export const Wapper = styled.a`
     &.active {
         & > ${ServerItemContentWapper} {
             background: ${(props) => props.theme.brand_normal};
-            border-radius: 30%;
+            border-radius: 33%;
             & ${ItemLink} {
                 color: ${(props) => props.theme.header_primary};
                 & path {
@@ -63,7 +63,7 @@ export const Wapper = styled.a`
             height: 40px;
         }
         ${NoticeMask} {
-            border-radius: 30% !important;
+            border-radius: 33% !important;
         }
     }
 
@@ -73,7 +73,7 @@ export const Wapper = styled.a`
         }
         &:not(.active):not(.folder) > ${ServerItemContentWapper} {
             background: ${(props) => props.theme.bg_primary}!important;
-            border-radius: 50%;
+            border-radius: 33%;
         }
     }
 
@@ -86,7 +86,7 @@ export const Wapper = styled.a`
             height: 0px !important;
         }
         ${ServerItemContentWapper} {
-            border-radius: 30%;
+            border-radius: 33%;
             background: ${(props) => props.theme.bg_primary}!important;
             & ${ItemLink} {
                 opacity: 0;
@@ -116,13 +116,13 @@ export const Wapper = styled.a`
                 width: 48px;
                 height: 48px;
                 position: absolute;
-                border-radius: 30%;
+                border-radius: 33%;
                 background: ${(props) =>
                     props.theme.bg_modifier_hover}!important;
             }
         }
         &:not(.folder):not(.folder-shaking) > ${ServerItemContentWapper} {
-            border-radius: 30%;
+            border-radius: 33%;
             background: ${(props) => props.theme.brand_normal};
             & ${ItemLink} {
                 color: ${(props) => props.theme.header_primary};
@@ -132,7 +132,7 @@ export const Wapper = styled.a`
             }
         }
         ${NoticeMask} {
-            border-radius: 30% !important;
+            border-radius: 33% !important;
         }
     }
 
@@ -145,7 +145,7 @@ export const Wapper = styled.a`
             }
         }
         ${ServerItemContentWapper} {
-            border-radius: 30% !important;
+            border-radius: 33% !important;
             background: ${(props) => props.theme.fl_normal_alt}!important;
             ${ItemGrid} {
                 display: grid;
@@ -167,7 +167,7 @@ export const Wapper = styled.a`
                 }
             }
             ${NoticeMask} {
-                border-radius: 30% !important;
+                border-radius: 33% !important;
             }
         }
         &.opening {
@@ -182,7 +182,7 @@ export const Wapper = styled.a`
         &.active {
             transform: translateY(0px);
             ${ServerItemNotice} {
-                transform: translate(-16px, 0px);
+                transform: translate(-16px, -1px);
             }
         }
     }

@@ -36,7 +36,7 @@ export const Wapper = styled.a`
     &.active,
     &:hover {
         background: ${(props) => props.theme.brand_normal};
-        border-radius: 30%;
+        border-radius: 33%;
         path {
             color: ${(props) => props.theme.header_primary};
         }
@@ -46,6 +46,7 @@ export const Wapper = styled.a`
             opacity: 1;
             width: 8px;
             height: 40px;
+            transform: translate(-36px, 0px);
         }
     }
     &:hover {
@@ -58,7 +59,7 @@ export const Wapper = styled.a`
     &:active {
         transform: translate(0px, 1px);
         ${ServerItemNotice} {
-            transform: translate(-36px, -2px);
+            transform: translate(-36px, -1px);
         }
     }
 `;
@@ -77,7 +78,7 @@ function ServerItemMe(props) {
             <Wapper
                 className={wapperClass}
                 role="treeItem"
-                aria-label="首頁"
+                aria-label="私人訊息"
                 onClick={() => dispatch(setActiveServerElId("@me"))}
             >
                 <ServerItemNotice showNotice={1} />
