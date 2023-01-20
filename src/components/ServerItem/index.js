@@ -73,7 +73,7 @@ export const Wapper = styled.a`
         }
         &:not(.active):not(.folder) > ${ServerItemContentWapper} {
             background: ${(props) => props.theme.bg_primary}!important;
-            border-radius: 33%;
+            border-radius: 50%;
         }
     }
 
