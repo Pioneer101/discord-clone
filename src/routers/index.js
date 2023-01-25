@@ -1,4 +1,4 @@
-import { Routes, Route, BrowserRouter, HashRouter } from "react-router-dom";
+import { Routes, Route, HashRouter } from "react-router-dom";
 import { useNavigate, useParams } from "react-router";
 import ChatArea from "../components/ChatArea";
 import ServerLayout from "../pages/serverLayout";
