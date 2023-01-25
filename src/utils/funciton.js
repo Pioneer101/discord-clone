@@ -3,11 +3,11 @@ export function swap(array, sourceIndex, targetIndex, swapLength) {
         targetIndex + (targetIndex > sourceIndex ? -swapLength : 0);
     array.splice(offsetIndex, 0, ...array.splice(sourceIndex, swapLength));
 }
-export function remove(array, removeIndex) {
-    array.splice(removeIndex, 1);
+export function remove(array, removeIndex, removeLength = 1) {
+    return array.splice(removeIndex, removeLength);
 }
-export function insert(array, insertIndex, insertItem) {
-    array.splice(insertIndex, 0, insertItem);
+export function insert(array, insertIndex, ...insertItem) {
+    array.splice(insertIndex, 0, ...insertItem);
 }
 
 export function findElIdByDataId(elState, targetDataId) {

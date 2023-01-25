@@ -210,7 +210,7 @@ export const Wapper = styled.a`
 function ServerItem(props) {
     const { index, drag } = props;
     const { hoverElId, maskPart } = drag.state.hoverMaskState;
-    const { draggingElId, isDraggingFolder } = drag.state.draggingState;
+    const { dragElId, isDragFolder } = drag.state.dragState;
     const { serverElState, serverData } = useSelector(
         getServerDataByIndex(index)
     );
@@ -218,15 +218,15 @@ function ServerItem(props) {
     const { isFolder, isOpen, serverElId, folderElId } = serverElState;
     const inFolder = !!folderElId;
     const isActive = useSelector(getIsActiveServer(serverElId));
-    const isDragging = draggingElId === serverElId;
+    const isDrag = dragElId === serverElId;
     const isHovering = serverElId === hoverElId;
-    const isDraggingOther = draggingElId !== null;
+    const isDragOther = dragElId !== null;
     const isItemInFolder = !isFolder && inFolder;
     const isShaking =
         maskPart === "bottom" &&
         isHovering &&
-        isDraggingOther &&
-        !isDraggingFolder &&
+        isDragOther &&
+        !isDragFolder &&
         ((isFolder && !isOpen) || !inFolder);
 
     const wapperClass = (() => {
@@ -235,8 +235,8 @@ function ServerItem(props) {
         if (isOpen) className += "opening ";
         if (isActive) className += "active ";
         if (isShaking) className += "folder-shaking ";
-        if (isDragging) className += "dragging ";
-        if (!isDragging && isDraggingOther) className += "dragging-other ";
+        if (isDrag) className += "dragging ";
+        if (!isDrag && isDragOther) className += "dragging-other ";
         return className;
     })();
     const toolTipLabel = serverNames.join(", ");
@@ -257,7 +257,7 @@ function ServerItem(props) {
                 />
                 <ServerDragMask
                     serverElId={serverElId}
-                    isDraggingOther={isDraggingOther}
+                    isDragOther={isDragOther}
                     isOpen={isOpen}
                     isItemInFolder={isItemInFolder}
                     isHovering={isHovering}

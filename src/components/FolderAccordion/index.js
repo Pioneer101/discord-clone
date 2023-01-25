@@ -56,26 +56,27 @@ const FolderWapper = styled.div`
             height: ${({ folderLength }) => folderLength * 56 + 48}px;
         }
     }
-    &.folderDragging {
+    &.folderDrag {
         overflow: hidden;
     }
 `;
 
 function FolderAccordion(props) {
     const { isOpen, folderLength, serverElId, drag, children } = props;
-    const { folderElId, isLastOfFolder, isFolder } = drag.state.hoverMaskState;
-    const { draggingElId, isDraggingFolder } = drag.state.draggingState;
-    const isFolderDragging = serverElId === draggingElId;
+    const { folderElId, isLastItemOfFolder, isFolder } =
+        drag.state.hoverMaskState;
+    const { dragElId, isDragFolder } = drag.state.dragState;
+    const isFolderDrag = serverElId === dragElId;
 
     const wapperClass = (() => {
         let className = "";
         if (isOpen) className = "folderOpening ";
-        if (isFolderDragging) className = "folderDragging ";
+        if (isFolderDrag) className = "folderDrag ";
         if (
             folderElId === serverElId &&
             !isFolder &&
-            isLastOfFolder &&
-            !isDraggingFolder
+            isLastItemOfFolder &&
+            !isDragFolder
         )
             className += "hover-in-folder-bottom ";
         return className;

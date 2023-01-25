@@ -46,19 +46,18 @@ export const Wapper = styled.div`
 `;
 
 function ServerDragMask(props) {
-    const { isDraggingOther, isItemInFolder, isHovering, serverElId, drag } =
-        props;
+    const { isDragOther, isItemInFolder, isHovering, serverElId, drag } = props;
     const { handleDragEnter, handleDragLeave, handleDragOver, handleDrop } =
         drag.handle;
     const { maskPart } = drag.state.hoverMaskState;
-    const { isDraggingFolder } = drag.state.draggingState;
+    const { isDragFolder } = drag.state.dragState;
 
     const wapperClass = (() => {
         let className = "";
         if (
-            isDraggingOther &&
+            isDragOther &&
             isHovering &&
-            !(isDraggingFolder
+            !(isDragFolder
                 ? (isItemInFolder && maskPart === "top") ||
                   maskPart === "bottom"
                 : isItemInFolder && maskPart === "bottom")

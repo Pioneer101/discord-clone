@@ -68,18 +68,18 @@ function ServerItemButton(props) {
     const { handleDragEnter, handleDragLeave, handleDragOver, handleDrop } =
         drag.handle;
     const { hoverElId, maskPart } = drag.state.hoverMaskState;
-    const { draggingElId } = drag.state.draggingState;
-    const isDraggingOther = draggingElId !== null;
-    const isHovering = "last" === hoverElId;
+    const { dragElId } = drag.state.dragState;
+    const isDragOther = dragElId !== null;
+    const isHovering = maskPart === "last";
     const handleClick = () => {};
 
     const wapperClass = (() => {
         let className = "";
-        if (isDraggingOther) className += "dragging-other ";
-        if (isDraggingOther && isHovering) className += "hover-" + maskPart;
+        if (isDragOther) className += "dragging-other ";
+        if (isDragOther && isHovering) className += "hover-last";
         return className;
     })();
-
+    console.log(hoverElId, maskPart);
     return (
         <>
             <Wapper

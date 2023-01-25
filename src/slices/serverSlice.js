@@ -146,17 +146,17 @@ export const serverSlice = createSlice({
             state.activeServerElId = serverElId;
             state.firstOpenApp = false;
         },
-        setDraggingServerElId: (state, action) => {
+        setDragServerElId: (state, action) => {
             const serverElId = action.payload;
             state.draggingServerElId = serverElId;
         },
         serverElMove: (state, action) => {
-            const { draggingState, hoverMaskState } = action.payload;
+            const { dragState, hoverMaskState } = action.payload;
             const { serverEl, serverElState } = state;
 
             console.log("@@@@@@@@@ serverElMove START", [...serverEl]);
-            const { draggingElId: dragElId, isDraggingFolder: isDragFolder } =
-                draggingState;
+            const { dragElId: dragElId, isDragFolder: isDragFolder } =
+                dragState;
             const dragElData = serverElState[dragElId];
             const { serverId: dragServerId, folderElId: dragFolderElId } =
                 dragElData;
@@ -172,7 +172,7 @@ export const serverSlice = createSlice({
                 maskPart,
                 hoverElId: dropElId,
                 folderElId: dropFolderElId,
-                isLastOfFolder: isLastOfDropFolder,
+                isLastItemOfFolder,
             } = hoverMaskState;
             const dropElData = serverElState[dropElId];
             const isDropFolderOpen =
@@ -191,204 +191,192 @@ export const serverSlice = createSlice({
                 Item to bottom with isLastOfDropFolder
                 Item to Folder bottom 
             */
-            const moveType = (() => {
-                if (maskPart === "top") {
-                    if (isDragFolder ? !isDropItemInFolder : true) {
-                        console.log("top", isDragFolder, isLastOfDropFolder);
-                        return "swap";
+            let targetIndex, sourceIndex, dropFolderServerId;
+            const swapAction = () => {
+                console.log(
+                    "###### Can Swap",
+                    "dragElIndex",
+                    dragElIndex,
+                    "dropElIndex",
+                    dropElIndex,
+                    "dragElLength",
+                    dragElLength
+                );
+                swap(state.serverEl, dragElIndex, dropElIndex, dragElLength);
+
+                targetIndex = dropElIndex - dropFolderElIndex - 1;
+                sourceIndex = dragElIndex - dragFolderElIndex - 1;
+                if (isDragItemInFolder) {
+                    // 來自資料夾
+                    console.log("### 來自資料夾");
+                    if (!isDropFolder && dragFolderElId === dropFolderElId) {
+                        // 同資料夾移動
+                        console.log("### Move same Folder");
+                        swap(
+                            serverElState[dropFolderElId].serverId,
+                            sourceIndex,
+                            targetIndex,
+                            1
+                        );
+                    } else if (!isDropFolder && dropFolderElId) {
+                        // 不同資料夾移動
+                        console.log("### Move diff Folder");
+                        remove(
+                            serverElState[dragFolderElId].serverId,
+                            sourceIndex
+                        );
+                        insert(
+                            serverElState[dropFolderElId].serverId,
+                            targetIndex,
+                            dragServerId[0]
+                        );
+                        serverElState[dragElId].folderElId = dropFolderElId;
+                    } else {
+                        // 從資料夾移出
+                        console.log("### Remove from Folder");
+                        remove(
+                            serverElState[dragFolderElId].serverId,
+                            sourceIndex
+                        );
+                        serverElState[dragElId].folderElId = false;
                     }
-                } else if (maskPart === "bottom") {
-                    if (!isDragFolder && isLastOfDropFolder) {
-                        return "swap";
+                } else {
+                    console.log("### 不來自資料夾");
+                    if (isDropItemInFolder) {
+                        // 移進資料夾
+                        console.log("### Move item to Folder");
+                        serverElState[dragElId].folderElId = dropFolderElId;
+                        insert(
+                            serverElState[dropFolderElId].serverId,
+                            targetIndex,
+                            dragServerId[0]
+                        );
+                    }
+                }
+            };
+            const insertFolderAction = () => {
+                dropFolderServerId = serverElState[dropFolderElId].serverId;
+                if (isDragItemInFolder) {
+                    const dragFolderServerId =
+                        serverElState[dragFolderElId].serverId;
+                    console.log("從資料夾移除", dragElIndex, dragFolderElIndex);
+                    sourceIndex = dragElIndex - dragFolderElIndex - 1;
+                    console.log([...dragFolderServerId]);
+                    remove(dragFolderServerId, sourceIndex);
+                    console.log([...dragFolderServerId]);
+                }
+                insert(
+                    dropFolderServerId,
+                    dropFolderServerId.length,
+                    dragServerId[0]
+                );
+                if (isDropFolderOpen) {
+                    console.log(
+                        "純換 EL",
+                        dropFolderElIndex,
+                        dropFolderServerId.length
+                    );
+                    targetIndex = dropFolderElIndex + dropFolderServerId.length;
+                    const offsetIndex =
+                        targetIndex +
+                        (dropFolderElIndex > dragElIndex ? -1 : 0);
+                    console.log([...serverEl]);
+                    remove(serverEl, dragElIndex);
+                    console.log([...serverEl]);
+                    insert(serverEl, offsetIndex, dragElId);
+                    console.log([...serverEl]);
+                } else {
+                    console.log("刪除 EL");
+                    remove(serverEl, dragElIndex);
+                }
+                serverElState[dragElId].folderElId = dropFolderElId;
+                console.log("##### insert Folder");
+            };
+            const insertLastAction = () => {
+                const dragElLength = dragElData.isOpen
+                    ? dragElData.serverId.length + 1
+                    : 1;
+                if (isDragItemInFolder) {
+                    const dragFolderServerId =
+                        serverElState[dragFolderElId].serverId;
+                    sourceIndex = dragElIndex - dragFolderElIndex - 1;
+                    remove(dragFolderServerId, sourceIndex);
+                }
+                const lastIndex = serverEl.length - 1;
+                const dragEls =
+                    remove(serverEl, dragElIndex, dragElLength) || [];
+                console.log(dragEls);
+                insert(serverEl, lastIndex, ...dragEls);
+
+                serverElState[dragElId].folderElId = false;
+                console.log("##### insert Last");
+            };
+            const createFolderAction = () => {
+                if (dragFolderElId) {
+                    const dragFolderServerId =
+                        serverElState[dragFolderElId].serverId;
+                    remove(
+                        dragFolderServerId,
+                        dragFolderServerId.indexOf(dragServerId[0])
+                    );
+                    console.log([...dragFolderServerId]);
+                }
+                targetIndex =
+                    dropElIndex - 1 + (dropElIndex - 1 > dragElIndex ? -1 : 0);
+                remove(serverEl, dragElIndex);
+                remove(serverEl, targetIndex);
+
+                const serverElId = [];
+                for (let key in serverElState) {
+                    serverElId.push(key);
+                }
+                const newFolderId = createFolderId(serverElId);
+                serverElState[newFolderId] = {
+                    serverId: [dropElData.serverId[0], dragServerId[0]],
+                    serverElId: newFolderId,
+                    folderElId: newFolderId,
+                    isFolder: true,
+                    isOpen: false,
+                };
+                serverElState[dragElId].folderElId = newFolderId;
+                serverElState[dropElId].folderElId = newFolderId;
+                insert(serverEl, targetIndex, newFolderId);
+                console.log("##### Create Folder");
+            };
+            switch (maskPart) {
+                case "top":
+                    if (isDragFolder ? !isDropItemInFolder : true) {
+                        swapAction();
+                    }
+                    break;
+                case "bottom":
+                    if (!isDragFolder && isLastItemOfFolder) {
+                        swapAction();
                     }
                     if (!isDragFolder && isDropFolder) {
-                        return "insertFolder";
+                        insertFolderAction();
                     }
                     if (!isDragFolder && !isDropFolder && !isDropItemInFolder) {
-                        return "createFolder";
+                        createFolderAction();
                     }
-                } else if (maskPart === "last") {
-                    return "insertLast";
-                }
-            })();
-
-            let targetIndex, sourceIndex, dropFolderServerId;
-            switch (moveType) {
-                case "swap":
-                    console.log(
-                        "###### Can Swap",
-                        "dragElIndex",
-                        dragElIndex,
-                        "dropElIndex",
-                        dropElIndex,
-                        "dragElLength",
-                        dragElLength
-                    );
-                    swap(
-                        state.serverEl,
-                        dragElIndex,
-                        dropElIndex,
-                        dragElLength
-                    );
-
-                    targetIndex = dropElIndex - dropFolderElIndex - 1;
-                    sourceIndex = dragElIndex - dragFolderElIndex - 1;
-                    if (isDragItemInFolder) {
-                        // 來自資料夾
-                        console.log("### 來自資料夾");
-                        if (
-                            !isDropFolder &&
-                            dragFolderElId === dropFolderElId
-                        ) {
-                            // 同資料夾移動
-                            console.log("### Move same Folder");
-                            swap(
-                                serverElState[dropFolderElId].serverId,
-                                sourceIndex,
-                                targetIndex,
-                                1
-                            );
-                        } else if (!isDropFolder && dropFolderElId) {
-                            // 不同資料夾移動
-                            console.log("### Move diff Folder");
-                            remove(
-                                serverElState[dragFolderElId].serverId,
-                                sourceIndex
-                            );
-                            insert(
-                                serverElState[dropFolderElId].serverId,
-                                targetIndex,
-                                dragServerId[0]
-                            );
-                            serverElState[dragElId].folderElId = dropFolderElId;
-                        } else {
-                            // 從資料夾移出
-                            console.log("### Remove from Folder");
-                            remove(
-                                serverElState[dragFolderElId].serverId,
-                                sourceIndex
-                            );
-                            serverElState[dragElId].folderElId = false;
-                        }
-                    } else {
-                        console.log("### 不來自資料夾");
-                        if (isDropItemInFolder) {
-                            // 移進資料夾
-                            console.log("### Move item to Folder");
-                            serverElState[dragElId].folderElId = dropFolderElId;
-                            insert(
-                                serverElState[dropFolderElId].serverId,
-                                targetIndex,
-                                dragServerId[0]
-                            );
-                        }
-                    }
-
                     break;
-                case "insertFolder":
-                    dropFolderServerId = serverElState[dropFolderElId].serverId;
-                    if (isDragItemInFolder) {
-                        const dragFolderServerId =
-                            serverElState[dragFolderElId].serverId;
-                        console.log(
-                            "從資料夾移除",
-                            dragElIndex,
-                            dragFolderElIndex
-                        );
-                        sourceIndex = dragElIndex - dragFolderElIndex - 1;
-                        console.log([...dragFolderServerId]);
-                        remove(dragFolderServerId, sourceIndex);
-                        console.log([...dragFolderServerId]);
-                    }
-                    insert(
-                        dropFolderServerId,
-                        dropFolderServerId.length,
-                        dragServerId[0]
-                    );
-                    if (isDropFolderOpen) {
-                        console.log(
-                            "純換 EL",
-                            dropFolderElIndex,
-                            dropFolderServerId.length
-                        );
-                        targetIndex =
-                            dropFolderElIndex + dropFolderServerId.length;
-                        const offsetIndex =
-                            targetIndex +
-                            (dropFolderElIndex > dragElIndex ? -1 : 0);
-                        console.log([...serverEl]);
-                        remove(serverEl, dragElIndex);
-                        console.log([...serverEl]);
-                        insert(serverEl, offsetIndex, dragElId);
-                        console.log([...serverEl]);
-                    } else {
-                        console.log("刪除 EL");
-                        remove(serverEl, dragElIndex);
-                    }
-                    serverElState[dragElId].folderElId = dropFolderElId;
-                    console.log("##### insert Folder");
-                    break;
-                case "insertLast":
-                    if (isDragItemInFolder) {
-                        const dragFolderServerId =
-                            serverElState[dragFolderElId].serverId;
-                        sourceIndex = dragElIndex - dragFolderElIndex - 1;
-                        remove(dragFolderServerId, sourceIndex);
-                    }
-                    const lastIndex = serverEl.length - 1;
-                    remove(serverEl, dragElIndex);
-                    insert(serverEl, lastIndex, dragElId);
-
-                    serverElState[dragElId].folderElId = false;
-                    console.log("##### insert Last");
-                    break;
-                case "createFolder":
-                    if (dragFolderElId) {
-                        const dragFolderServerId =
-                            serverElState[dragFolderElId].serverId;
-                        remove(
-                            dragFolderServerId,
-                            dragFolderServerId.indexOf(dragServerId[0])
-                        );
-                        console.log([...dragFolderServerId]);
-                    }
-                    targetIndex =
-                        dropElIndex -
-                        1 +
-                        (dropElIndex - 1 > dragElIndex ? -1 : 0);
-                    remove(serverEl, dragElIndex);
-                    remove(serverEl, targetIndex);
-
-                    const serverElId = [];
-                    for (let key in serverElState) {
-                        serverElId.push(key);
-                    }
-                    const newFolderId = createFolderId(serverElId);
-                    serverElState[newFolderId] = {
-                        serverId: [dropElData.serverId[0], dragServerId[0]],
-                        serverElId: newFolderId,
-                        folderElId: newFolderId,
-                        isFolder: true,
-                        isOpen: false,
-                    };
-                    serverElState[dragElId].folderElId = newFolderId;
-                    serverElState[dropElId].folderElId = newFolderId;
-                    insert(serverEl, targetIndex, newFolderId);
-                    console.log("##### Create Folder");
+                case "last":
+                    insertLastAction();
                     break;
                 default:
-                    console.log("##### undefined Type");
             }
-
-            // 移除空資料夾
-            if (
-                dragFolderElId &&
-                serverElState[dragFolderElId].serverId.length === 0
-            ) {
-                console.log("### remove Folder");
-                const currentDragFolderIndex = serverEl.indexOf(dragFolderElId);
-                remove(state.serverEl, currentDragFolderIndex);
-                delete serverElState[dragFolderElId];
+            removeEmptyFolder();
+            function removeEmptyFolder() {
+                if (
+                    dragFolderElId &&
+                    serverElState[dragFolderElId].serverId.length === 0
+                ) {
+                    console.log("### remove Folder");
+                    const currentDragFolderIndex =
+                        serverEl.indexOf(dragFolderElId);
+                    remove(state.serverEl, currentDragFolderIndex);
+                    delete serverElState[dragFolderElId];
+                }
             }
         },
         toggleFolder: (state, action) => {
@@ -429,10 +417,6 @@ export const serverSlice = createSlice({
                 }
             }
             console.log("toggleFolder", action.payload, [...state.serverEl]);
-            // for (let i in state.serverElState) {
-            //     let v = serverElState[i];
-            //     console.log([...v.serverId], { ...v });
-            // }
         },
     },
 });

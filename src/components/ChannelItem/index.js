@@ -190,11 +190,11 @@ function ChannelItem(props) {
     const { channelName, type } = channelData;
 
     const isHover = hoverElId === channelElId;
-    const isDragging = dragElId && dragElId === channelElId;
-    const isDraggingOther = dragElId && !isDragging;
-    const isDraggingOtherDisable =
+    const isDrag = dragElId && dragElId === channelElId;
+    const isDragOther = dragElId && !isDrag;
+    const isDragOtherDisable =
         dragElId &&
-        isDraggingOther &&
+        isDragOther &&
         !isFolder &&
         (dragType === "folder" ? true : type !== dragType);
 
@@ -203,9 +203,9 @@ function ChannelItem(props) {
         if (isFolder) className += "folder ";
         if (!isFolder) className += "item ";
         if (isOpen) className += "opening ";
-        if (isDragging) className += "dragging ";
-        if (isDraggingOther) className += "dragging-other ";
-        if (isDraggingOtherDisable) className += "disable ";
+        if (isDrag) className += "dragging ";
+        if (isDragOther) className += "dragging-other ";
+        if (isDragOtherDisable) className += "disable ";
         if (isHover && canHover) className += `hovering-${hoverDirection} `;
         return className;
     })();

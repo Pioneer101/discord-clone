@@ -11,108 +11,88 @@ import ServerItemButton from "../ServerItemJoinButton";
 
 function useDrag(serverElState) {
     const initialState = {
-        draggingState: { draggingElId: null, isDraggingFolder: false },
+        dragState: { dragElId: null, isDragFolder: false },
         hoverMask: {
             maskPart: null,
             hoverEld: null,
             folderElId: false,
             hoverState: 0,
-            isLastOfFolder: false,
+            isLastItemOfFolder: false,
             isFolder: false,
         },
     };
     const [hoverMaskState, setHoverMaskState] = useState(
         initialState.hoverMask
     );
-    const [draggingState, setDraggingState] = useState(
-        initialState.draggingState
-    );
+    const [dragState, setDragState] = useState(initialState.dragState);
     const dispatch = useDispatch();
 
     const setHoverMask = (hoverMask) => {
         setHoverMaskState((preHoverMask) => {
-            const {
-                hoverElId: prevHoverElId,
-                maskPart: prevMask,
-                hoverState: prevHoverState,
-                isLastOfFolder: prevIsLastOfFolder,
-                folderElId: prevFolderElId,
-                isFolder: prevIsFolder,
-            } = preHoverMask;
+            // const { hoverState: prevHoverState } = preHoverMask;
             const [hoverElId, maskPart, hoverState] = hoverMask;
-            const currentHoverState = prevHoverState + hoverState;
-            let newHoverMask,
-                currElId,
-                currMaskPart,
-                currIsLastOfFolder,
-                currFolderElId,
-                currIsFolder;
+            // const currentHoverState = prevHoverState + hoverState;
+            let newHoverMask;
 
-            if (currentHoverState === 0) {
+            // if (currentHoverState === 0) {
+            //     newHoverMask = initialState.hoverMask;
+            // } else {
+            // if (hoverState === 1) {
+            if (maskPart === "last") {
+                // Last Item 固定行為
                 newHoverMask = {
-                    maskPart: null,
-                    hoverEld: null,
-                    folderElId: false,
-                    hoverState: 0,
-                    isLastOfFolder: false,
+                    ...initialState.hoverMask,
+                    hoverEld: hoverElId,
+                    maskPart: maskPart,
                 };
             } else {
-                if (hoverState === 1) {
-                    if (maskPart === "last") {
-                        currElId = hoverElId;
-                        currMaskPart = maskPart;
-                        currFolderElId = false;
-                        currIsLastOfFolder = false;
-                        currIsFolder = false;
-                    } else {
-                        currElId = hoverElId;
-                        currMaskPart = maskPart;
-                        currFolderElId = serverElState[currElId].folderElId;
-                        const folderServerId =
-                            serverElState[currFolderElId]?.serverId;
-                        const currentServerId =
-                            currElId !== currFolderElId &&
-                            serverElState[currElId].serverId[0];
-                        currIsLastOfFolder = !!(
-                            folderServerId &&
-                            maskPart === "bottom" &&
-                            currentServerId &&
-                            folderServerId.slice(-1)[0] === currentServerId
-                        );
-                        currIsFolder = serverElState[currElId].isFolder;
-                    }
-                } else if (hoverState === -1) {
-                    currElId = prevHoverElId;
-                    currMaskPart = prevMask;
-                    currIsLastOfFolder = prevIsLastOfFolder;
-                    currFolderElId = prevFolderElId;
-                    currIsFolder = prevIsFolder;
-                }
+                // 更新當前 HoverMask
+                const currElId = hoverElId;
+                const currMaskPart = maskPart;
+                const currFolderElId = serverElState[currElId].folderElId;
+                const currIsFolder = serverElState[currElId].isFolder;
+                const folderServerId = serverElState[currFolderElId]?.serverId;
+                const currentServerId =
+                    currElId !== currFolderElId &&
+                    serverElState[currElId].serverId[0];
+                const currIsLastOfFolder = !!(
+                    folderServerId &&
+                    maskPart === "bottom" &&
+                    currentServerId &&
+                    folderServerId.slice(-1)[0] === currentServerId
+                );
 
                 newHoverMask = {
                     hoverElId: currElId,
                     maskPart: currMaskPart,
-                    hoverState: currentHoverState,
-                    isLastOfFolder: currIsLastOfFolder,
+                    // hoverState: currentHoverState,
+                    isLastItemOfFolder: currIsLastOfFolder,
                     folderElId: currFolderElId,
                     isFolder: currIsFolder,
                 };
             }
+            // } else if (hoverState === -1) {
+            //     // Leave 時恢復上一次
+            //     newHoverMask = {
+            //         ...preHoverMask,
+            //         hoverState: currentHoverState,
+            //     };
+            // }
+            // }
             return newHoverMask;
         });
     };
     const clearHoverMask = () => setHoverMaskState(initialState.hoverMask);
 
-    const setDraggingElId = (draggingElId) => {
-        const { isFolder } = serverElState[draggingElId];
-        setDraggingState(() => ({ draggingElId, isDraggingFolder: isFolder }));
+    const setDragElId = (dragElId) => {
+        const { isFolder } = serverElState[dragElId];
+        setDragState(() => ({ dragElId, isDragFolder: isFolder }));
     };
-    const clearDraggingState = () =>
-        setDraggingState(initialState.draggingState);
+    const clearDragState = () => setDragState(initialState.dragState);
 
     const handleDragStart = (e) => {
         console.log("Start", e.target.dataset.id, e.currentTarget.dataset.id);
-        setDraggingElId(e.currentTarget.dataset.id);
+        setDragElId(e.currentTarget.dataset.id);
     };
     const handleDragEnter = (e) => {
         const { id, mask } = e.target.dataset;
@@ -123,7 +103,7 @@ function useDrag(serverElState) {
     };
     const handleDragLeave = (e) => {
         const { id, mask } = e.target.dataset;
-        setHoverMask([id, mask, -1]);
+        // setHoverMask([id, mask, -1]);
         console.log("handleDragLeave", id, mask);
         e.preventDefault();
         e.stopPropagation();
@@ -133,27 +113,27 @@ function useDrag(serverElState) {
         e.preventDefault();
     };
     const handleDrop = (e) => {
-        dispatch(serverElMove({ draggingState, hoverMaskState }));
-        clearDraggingState();
+        dispatch(serverElMove({ dragState, hoverMaskState }));
+        clearDragState();
         clearHoverMask();
         // console.log("Drop");
     };
     const handleDragEnd = (e) => {
         // console.log("End");
-        clearDraggingState();
+        clearDragState();
         clearHoverMask();
         e.preventDefault();
         e.stopPropagation();
     };
     const handleMouseEnter = (e) => {
-        // console.log("MouseEnter", hoverMaskState, draggingState);
+        // console.log("MouseEnter", hoverMaskState, dragState);
     };
 
     const state = {
         hoverMaskState,
-        draggingState,
+        dragState,
     };
-    const action = { setDraggingElId };
+    const action = { setDragElId };
 
     const handle = {
         handleDragEnter,
@@ -230,28 +210,26 @@ function ServerList(props) {
                 folderServerElId = serverElId;
                 folderEls.push(resultEl);
                 if (!isOpen) {
-                    serverListEls.push(
-                        spawnFolderAccordion(
-                            isOpen,
-                            folderLength,
-                            folderServerElId,
-                            folderAccordionKeyStr(folderServerIds)
-                        )
+                    const folderAccordionEl = spawnFolderAccordion(
+                        isOpen,
+                        folderLength,
+                        folderServerElId,
+                        folderAccordionKeyStr(folderServerIds)
                     );
+                    serverListEls.push(folderAccordionEl);
                     resetFolderState();
                 }
             } else if (folderServerIds.includes(serverId[0])) {
                 const isLastFolderEl = index === folderLastInedx;
                 folderEls.push(resultEl);
                 if (isLastFolderEl) {
-                    serverListEls.push(
-                        spawnFolderAccordion(
-                            true,
-                            folderLength,
-                            folderServerElId,
-                            folderAccordionKeyStr(folderServerIds)
-                        )
+                    const folderAccordionEl = spawnFolderAccordion(
+                        true,
+                        folderLength,
+                        folderServerElId,
+                        folderAccordionKeyStr(folderServerIds)
                     );
+                    serverListEls.push(folderAccordionEl);
                     resetFolderState();
                 }
             } else {
